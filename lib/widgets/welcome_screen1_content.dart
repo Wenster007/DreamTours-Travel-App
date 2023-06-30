@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../constants/constant.dart';
 
-
 class WelcomeScreen1Content extends StatelessWidget {
   const WelcomeScreen1Content({Key? key}) : super(key: key);
 
@@ -44,17 +43,18 @@ class WelcomeScreen1Content extends StatelessWidget {
                 ),
                 Row(children: [
                   const SizedBox(
-                    width: 20,
+                    width: 25,
                   ),
                   MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      //on get Started click button.
+                    },
                     color: const Color(0xFFF38000),
                     textColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 28),
                     shape: const RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(30)),
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
                     ),
                     child: const Text(
                       "Get started",
@@ -65,15 +65,17 @@ class WelcomeScreen1Content extends StatelessWidget {
               ],
             ),
           ),
+          Positioned( bottom: 150, right: 25, child: Image.asset("assets/images/welcome1/yellowleaf.png")),
           Positioned(
-              bottom: 140,
+              bottom: 120,
               left: -50,
               child: Image.asset(
                 "assets/images/welcome1/welcome1.png",
                 width: 500,
-                height: 470,
+                height: 500,
                 fit: BoxFit.contain,
               )),
+
         ]),
       ),
     );
