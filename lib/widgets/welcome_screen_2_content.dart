@@ -1,10 +1,17 @@
+import 'package:dreamtour/screens/splace_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/constant.dart';
 
 class WelcomeScreen2Content extends StatelessWidget {
   const WelcomeScreen2Content({Key? key}) : super(key: key);
+
+  Future<void> markScreensAsSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasSeenScreens', true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +29,7 @@ class WelcomeScreen2Content extends StatelessWidget {
                   height: 60,
                 ),
                 Text(
-                  "Let's Travel",
+                  "Plan A Trip",
                   style: GoogleFonts.poppins(
                     fontSize: 33,
                     color: kPrimaryColor,
@@ -48,6 +55,11 @@ class WelcomeScreen2Content extends StatelessWidget {
                   MaterialButton(
                     onPressed: () {
                       //on get Started click button.
+                      markScreensAsSeen();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SplaceScreen()),
+                      );
                     },
                     color: const Color(0xFFF38000),
                     textColor: Colors.white,
@@ -65,9 +77,12 @@ class WelcomeScreen2Content extends StatelessWidget {
               ],
             ),
           ),
-          Positioned( bottom: 150, right: 25, child: Image.asset("assets/images/welcome1/yellowleaf.png")),
           Positioned(
-              bottom: 130,
+              bottom: 150,
+              right: 25,
+              child: Image.asset("assets/images/welcome1/yellowleaf.png")),
+          Positioned(
+              bottom: 120,
               left: -150,
               child: Image.asset(
                 "assets/images/welcome2/welcome2.png",
@@ -75,9 +90,8 @@ class WelcomeScreen2Content extends StatelessWidget {
                 height: 450,
                 fit: BoxFit.contain,
               )),
-
         ]),
       ),
-    );;
+    );
   }
 }
