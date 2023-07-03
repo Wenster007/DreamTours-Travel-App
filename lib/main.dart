@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   Future<bool> hasSeenScreen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('hasSeenScreens') ?? false;
+
   }
 
   @override
