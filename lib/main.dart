@@ -2,9 +2,14 @@ import 'package:dreamtour/screens/splace_screen.dart';
 import 'package:dreamtour/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((fn) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -25,13 +30,24 @@ class MyApp extends StatelessWidget {
           final bool hasSeen = snapshot.data!;
 
           if (hasSeen) {
-            return const MaterialApp(home: SplaceScreen(),);
+            return const MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: SplaceScreen(),
+            );
           } else {
-            return const MaterialApp(home: WelcomeScreen(),);
+            return const MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: WelcomeScreen(),
+            );
           }
         } else {
-          return const MaterialApp(home: Scaffold(
-              body: Center(child: Text("Problem is connecting"),)),);
+          return const MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: Text(""),
+              ),
+            ),
+          );
         }
       },
     );
