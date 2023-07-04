@@ -1,3 +1,4 @@
+import 'package:dreamtour/screens/signup_screen.dart';
 import 'package:dreamtour/screens/splace_screen.dart';
 import 'package:dreamtour/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
           if (hasSeen) {
             return const MaterialApp(
               debugShowCheckedModeBanner: false,
-              home: SplaceScreen(),
+              home: SignUpScreen(),
             );
           } else {
             return const MaterialApp(
