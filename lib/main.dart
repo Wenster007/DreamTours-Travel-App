@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           final bool hasSeen = snapshot.data!;
 
           if (hasSeen) {
-            return const MaterialApp(
+            return MaterialApp(
               debugShowCheckedModeBanner: false,
               home: SignUpScreen(),
             );
