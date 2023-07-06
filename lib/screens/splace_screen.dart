@@ -1,3 +1,5 @@
+import 'package:dreamtour/screens/login_screen.dart';
+import 'package:dreamtour/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplaceScreen extends StatelessWidget {
@@ -72,7 +74,9 @@ class SplaceScreen extends StatelessWidget {
               left: width * 0.07,
               child: MaterialButton(
                 onPressed: () {
-                  //login button function
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ));
                 },
                 color: const Color(0xFFF38000),
                 textColor: Colors.white,
@@ -96,13 +100,17 @@ class SplaceScreen extends StatelessWidget {
               left: width * 0.07,
               child: MaterialButton(
                 onPressed: () {
-                  //create account button function
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SignUpScreen(),
+                    ),
+                  );
                 },
                 color: const Color(0xFFF38000),
                 textColor: Colors.white,
                 padding: EdgeInsets.symmetric(
                   vertical: height * 0.022,
-                  horizontal: width * 0.225,
+                  horizontal: width * 0.222,
                 ),
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(
