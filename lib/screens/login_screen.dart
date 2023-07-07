@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -9,6 +12,44 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _key = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String? _emailError;
+  String? _passError;
+  String firebasePass = "";
+  String firebaseEmail = "";
+
+  //-------------==========================================-----------------------
+
+  void checkEmailInFirebase(String email) async {
+    final url =
+        Uri.https("dummy-59b5d-default-rtdb.firebaseio.com", "users.json");
+    final response = await http.get(url);
+
+    final Map<String, dynamic> listData = json.decode(response.body);
+
+    for (var data in listData.entries) {
+      if (data.value["user_email"] == email) {
+        firebaseEmail = data.value["user_email"];
+      }
+    }
+  }
+
+  void checkPasswordInFirebase(String pass) async {
+    final url =
+        Uri.https("dummy-59b5d-default-rtdb.firebaseio.com", "users.json");
+    final response = await http.get(url);
+
+    final Map<String, dynamic> listData = json.decode(response.body);
+
+    for (var data in listData.entries) {
+      if (data.value["user_email"] == firebaseEmail) {
+        if(data.value["user_password"] == pass){
+          firebasePass = data.value["user_password"];
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Column(
                             children: [
                               TextFormField(
+                                controller: _emailController,
                                 decoration: const InputDecoration(
                                   label: Text(
                                     "Email",
@@ -80,19 +122,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 validator: (value) {
-                                  if (value == null ||
-                                      value.isEmpty ||
-                                      !value.contains("@") ||
-                                      value.trim().length <= 1) {
-                                    return "Incorrect Email Format";
+                                  checkEmailInFirebase(_emailController.text);
+
+                                  if (value == null || value.isEmpty) {
+                                    _emailError = "Please Enter an Email";
+                                    return _emailError;
                                   }
-                                  return null;
+
+                                  if (_emailController.text != firebaseEmail) {
+                                    _emailError = "The Email is Incorrect";
+                                    return _emailError;
+                                  }
+
+                                  setState(() {
+                                    _emailError = null;
+                                  });
+
+                                  return _emailError;
                                 },
                               ),
                               SizedBox(
                                 height: height * 0.02,
                               ),
                               TextFormField(
+                                controller: _passwordController,
                                 decoration: const InputDecoration(
                                   label: Text(
                                     "Password",
@@ -107,7 +160,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 validator: (value) {
-                                  //check the password with the database
+                                  checkPasswordInFirebase(
+                                      _passwordController.text);
+
+                                  if (value == null || value.isEmpty) {
+                                    _passError = "Please Enter a Password";
+                                    return _passError;
+                                  }
+
+                                  if (_passwordController.text !=
+                                      firebasePass) {
+                                    _passError = "The Password is Incorrect";
+                                    return _passError;
+                                  }
+
+                                  setState(() {
+                                    _passError = null;
+                                  });
+
+                                  return _emailError;
                                 },
                                 keyboardType: TextInputType.text,
                                 obscureText: true,
@@ -118,7 +189,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 children: [
                                   TextButton(
                                     onPressed: () {},
-                                    child: const Text("Forgot Password?", style: TextStyle(color: Colors.grey)),
+                                    child: const Text("Forgot Password?",
+                                        style: TextStyle(color: Colors.grey)),
                                   ),
                                 ],
                               ),
@@ -133,7 +205,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: height * 0.03,
                   ),
                   MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (_key.currentState!.validate()) {
+                        Navigator.of(context).pop();
+                      }
+                    },
                     color: const Color(0xFFF38000),
                     textColor: Colors.white,
                     padding: EdgeInsets.symmetric(
