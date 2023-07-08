@@ -50,7 +50,7 @@ class WelcomeScreen1Content extends StatelessWidget {
                   Text(
                     "Let's Travel",
                     style: GoogleFonts.poppins(
-                      fontSize: width * 0.09,
+                      fontSize: width * 0.1,
                       color: kPrimaryColor,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.5,
@@ -59,7 +59,7 @@ class WelcomeScreen1Content extends StatelessWidget {
                   Text(
                     "Unleash your wanderlust with our travel app, unlocking limitless destinations and remarkable experiences.",
                     style: GoogleFonts.poppins(
-                      fontSize: width * 0.028,
+                      fontSize: width * 0.032,
                       color: const Color(0xFF707070),
                       letterSpacing: 1.2,
                     ),

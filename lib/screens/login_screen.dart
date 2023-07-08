@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:dreamtour/model/users.dart';
+import 'package:dreamtour/screens/main_content_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,44 +13,40 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _key = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String? _emailError;
-  String? _passError;
-  String firebasePass = "";
-  String firebaseEmail = "";
+  bool isEmailCorrect = false;
+  bool isPassCorrect = false;
+  final _key = GlobalKey<FormState>();
+  final List<User> users = [];
 
   //-------------==========================================-----------------------
 
-  void checkEmailInFirebase(String email) async {
+  void getUsersFromFirebase() async {
     final url =
         Uri.https("dummy-59b5d-default-rtdb.firebaseio.com", "users.json");
+
     final response = await http.get(url);
+    final Map<String, dynamic> dataMap = json.decode(response.body);
 
-    final Map<String, dynamic> listData = json.decode(response.body);
-
-    for (var data in listData.entries) {
-      if (data.value["user_email"] == email) {
-        firebaseEmail = data.value["user_email"];
-      }
+    for (var item in dataMap.entries) {
+      User user = User(item.value["user_name"], item.value["user_email"],
+          item.value["user_password"]);
+      users.add(user);
     }
   }
 
-  void checkPasswordInFirebase(String pass) async {
-    final url =
-        Uri.https("dummy-59b5d-default-rtdb.firebaseio.com", "users.json");
-    final response = await http.get(url);
+  @override
+  void initState() {
+    getUsersFromFirebase();
+    super.initState();
+  }
 
-    final Map<String, dynamic> listData = json.decode(response.body);
-
-    for (var data in listData.entries) {
-      if (data.value["user_email"] == firebaseEmail) {
-        if(data.value["user_password"] == pass){
-          firebasePass = data.value["user_password"];
-        }
-      }
-    }
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -122,23 +120,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 validator: (value) {
-                                  checkEmailInFirebase(_emailController.text);
-
                                   if (value == null || value.isEmpty) {
-                                    _emailError = "Please Enter an Email";
-                                    return _emailError;
+                                    return "Please enter an email";
                                   }
 
-                                  if (_emailController.text != firebaseEmail) {
-                                    _emailError = "The Email is Incorrect";
-                                    return _emailError;
+                                  isEmailCorrect = false;
+
+                                  for (var item in users) {
+                                    if (item.email == _emailController.text) {
+                                      isEmailCorrect = true;
+                                    }
                                   }
 
-                                  setState(() {
-                                    _emailError = null;
-                                  });
+                                  if (!isEmailCorrect) {
+                                    return "No Email Found. Please create a new Account.";
+                                  }
 
-                                  return _emailError;
+                                  return null;
                                 },
                               ),
                               SizedBox(
@@ -160,25 +158,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 validator: (value) {
-                                  checkPasswordInFirebase(
-                                      _passwordController.text);
-
                                   if (value == null || value.isEmpty) {
-                                    _passError = "Please Enter a Password";
-                                    return _passError;
+                                    return "Please enter a Password";
                                   }
 
-                                  if (_passwordController.text !=
-                                      firebasePass) {
-                                    _passError = "The Password is Incorrect";
-                                    return _passError;
+                                  isPassCorrect = false;
+
+                                  for (var item in users) {
+                                    if (item.email == _emailController.text) {
+                                      if (item.password ==
+                                          _passwordController.text) {
+                                        isPassCorrect = true;
+                                      }
+                                    }
                                   }
 
-                                  setState(() {
-                                    _passError = null;
-                                  });
+                                  if (!isPassCorrect) {
+                                    return "Wrong Password.";
+                                  }
 
-                                  return _emailError;
+                                  return null;
                                 },
                                 keyboardType: TextInputType.text,
                                 obscureText: true,
@@ -207,7 +206,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   MaterialButton(
                     onPressed: () {
                       if (_key.currentState!.validate()) {
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const MainContentScreen(),
+                        ));
                       }
                     },
                     color: const Color(0xFFF38000),
