@@ -30,8 +30,11 @@ class _LoginScreenState extends State<LoginScreen> {
     final Map<String, dynamic> dataMap = json.decode(response.body);
 
     for (var item in dataMap.entries) {
-      User user = User(item.value["user_name"], item.value["user_email"],
-          item.value["user_password"]);
+      User user = User(
+        item.value["user_name"],
+        item.value["user_email"],
+        item.value["user_password"],
+      );
       users.add(user);
     }
   }
@@ -208,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (_key.currentState!.validate()) {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => const MainContentScreen(),
-                        ));
+                        ),);
                       }
                     },
                     color: const Color(0xFFF38000),

@@ -1,3 +1,4 @@
+import 'package:dreamtour/screens/main_content_screen.dart';
 import 'package:dreamtour/screens/signup_screen.dart';
 import 'package:dreamtour/screens/splace_screen.dart';
 import 'package:dreamtour/screens/welcome_screen.dart';
@@ -16,14 +17,17 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+
   Future<bool> hasSeenScreen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('hasSeenScreens') ?? false;
 
   }
 
+
   @override
   Widget build(BuildContext context) {
+
     return FutureBuilder<bool>(
       future: hasSeenScreen(),
       builder: (context, snapshot) {
@@ -34,7 +38,7 @@ class MyApp extends StatelessWidget {
           if (hasSeen) {
             return const MaterialApp(
               debugShowCheckedModeBanner: false,
-              home: WelcomeScreen(),
+              home: MainContentScreen(),
             );
           } else {
             return const MaterialApp(
